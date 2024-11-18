@@ -9,10 +9,7 @@ spec:
   progressDeadlineSeconds: 60
   strategy:
     canary:
-      steps:
-        - setWeight: 50
-        - pause: { duration: 30 }
-        - setWeight: 100
+      steps: []
   selector:
     matchLabels:
       app: test-app-rollout
