@@ -9,12 +9,6 @@ ARGO_ROLLOUTS_VERSION = v1.7.2
 
 all: create-cluster install argo-cd-dashboard rollout-dashboard
 
-manifests/installs/argo-rollouts-install.yml:
-	curl -sSL -o manifests/installs/argo-rollouts-install.yml https://raw.githubusercontent.com/argoproj/argo-rollouts/$(ARGO_ROLLOUTS_VERSION)/manifests/install.yaml
-
-manifests/installs/argo-cd-install.yml:
-	curl -sSL -o manifests/installs/argo-cd-install.yml https://raw.githubusercontent.com/argoproj/argo-cd/$(ARGOCD_VERSION)/manifests/install.yaml
-
 create-cluster:
 	@echo "Creating a Kind cluster..."
 	$(KIND) create cluster --config kind-config.yaml
@@ -23,11 +17,13 @@ delete-cluster:
 	@echo "Deleting the Kind cluster..."
 	$(KIND) delete cluster
 
-install: manifests/installs/argo-rollouts-install.yml manifests/installs/argo-cd-install.yml
+install:
 	@echo "Installing ArgoCD and Argo Rollouts..."
 	$(KUBECTL) create namespace argocd || true
+	$(KUBECTL) create namespace argo-rollouts || true
 	$(KUBECTL) create namespace test-namespace || true
-	$(KUBECTL) apply -f manifests/installs/ --namespace=argocd
+	$(KUBECTL) apply -n argocd -f https://github.com/argoproj/argo-cd/raw/$(ARGOCD_VERSION)/manifests/install.yaml
+	$(KUBECTL) apply -n argo-rollouts -f https://github.com/argoproj/argo-rollouts/raw/$(ARGO_ROLLOUTS_VERSION)/manifests/install.yaml
 
 pods:
 	$(KUBECTL) get pods -A
@@ -50,9 +46,9 @@ argo-cd-login:
 .PHONY: sync-app
 sync-app: argo-cd-login
 	@echo "Syncing the example application..."
-	$(ARGOCD) app sync test-app --local manifests/test-app/
+	$(ARGOCD) app sync test-app --local manifests/
 
 .PHONY: create-app
 create-app: argo-cd-login
 	@echo "Creating an example application..."
-	$(ARGOCD) app create test-app --repo https://github.com/zhammer/argocd-degraded-replica --path manifests/test-app --dest-server https://kubernetes.default.svc --dest-namespace argocd
+	$(ARGOCD) app create test-app --repo https://github.com/zhammer/argocd-degraded-replica --path manifests/ --dest-server https://kubernetes.default.svc --dest-namespace argocd
