@@ -5,18 +5,17 @@ KIND = kind
 ARGOCD_VERSION = v2.13.0
 ARGO_ROLLOUTS_VERSION = v1.7.2
 
-.PHONY: all create-cluster delete-cluster install start stop argo-cd-dashboard pods
-
-all: create-cluster install argo-cd-dashboard rollout-dashboard
-
+.PHONY: create-cluster
 create-cluster:
 	@echo "Creating a Kind cluster..."
 	$(KIND) create cluster --config kind-config.yaml
 
+.PHONY: delete-cluster
 delete-cluster:
 	@echo "Deleting the Kind cluster..."
 	$(KIND) delete cluster
 
+.PHONY: install
 install:
 	@echo "Installing ArgoCD and Argo Rollouts..."
 	$(KUBECTL) create namespace argocd || true
@@ -25,13 +24,17 @@ install:
 	$(KUBECTL) apply -n argocd -f https://github.com/argoproj/argo-cd/raw/$(ARGOCD_VERSION)/manifests/install.yaml
 	$(KUBECTL) apply -n argo-rollouts -f https://github.com/argoproj/argo-rollouts/raw/$(ARGO_ROLLOUTS_VERSION)/manifests/install.yaml
 
+.PHONY: pods
 pods:
 	$(KUBECTL) get pods -A
 
+.PHONY: start
 start: create-cluster install
 
+.PHONY: stop
 stop: delete-cluster
 
+.PHONY: argo-cd-dashboard
 argo-cd-dashboard:
 	@echo "Fetching ArgoCD admin password..."
 	@echo "Visit https://localhost:8080 to login."
