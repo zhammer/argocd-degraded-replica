@@ -15,3 +15,7 @@ This repository provides an automated way to run ArgoCD and Argo Rollouts locall
 2. `make argo-cd-dashboard` (port forward into argocd, make take a minute to be ready)
 3. `make create-app` (create argocd app)
 4. `make sync-app` (sync the app)
+
+## test-app
+
+The `Application` in this repo (`test-app`), contains two deployables: one a `Rollout` and one a `Deployment`. Each is a simple nginx server with `progressDeadlineSeconds: 60` and `initialDelaySeconds: 90`: for 30 seconds after the progress deadline has exceeded each will be unhealthy. The rollout is a canary with no steps.
