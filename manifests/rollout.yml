@@ -6,7 +6,7 @@ metadata:
 spec:
   replicas: 1
   revisionHistoryLimit: 2
-  progressDeadlineSeconds: 60
+  progressDeadlineSeconds: 15
   strategy:
     canary: {}
   selector:
@@ -24,7 +24,7 @@ spec:
             httpGet:
               path: /
               port: 80
-            initialDelaySeconds: 90 # Delays readiness
+            initialDelaySeconds: 60 # Delays readiness
             periodSeconds: 5
           ports:
             - containerPort: 80

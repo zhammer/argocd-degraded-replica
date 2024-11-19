@@ -18,4 +18,4 @@ This repository provides an automated way to run ArgoCD and Argo Rollouts locall
 
 ## test-app
 
-The `Application` in this repo (`test-app`), contains two deployables: one a `Rollout` and one a `Deployment`. Each is a simple nginx server with `progressDeadlineSeconds: 60` and `initialDelaySeconds: 90`: for 30 seconds after the progress deadline has exceeded each will be unhealthy. The rollout is a canary with no steps.
+The `Application` in this repo (`test-app`), contains two deployables: one a `Rollout` and one a `Deployment`. Each is a simple nginx server with `progressDeadlineSeconds: 15` and `initialDelaySeconds: 60`: for 45 seconds after the progress deadline has exceeded each will be unhealthy. The rollout is a canary with no steps.
