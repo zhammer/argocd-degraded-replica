@@ -11,8 +11,7 @@ This repository provides an automated way to run ArgoCD and Argo Rollouts locall
 
 ## Instructions
 
-1. `make start`
-   1. This creates the kind cluster with argocd on it
-2. `make argo-cd-dashboard`
-3. `make create-app`
-4. `make sync-app`
+1. `make start` (create cluster with argocd & rollouts)
+2. `make argo-cd-dashboard` (port forward into argocd, make take a minute to be ready)
+3. `make create-app` (create argocd app)
+4. `make sync-app` (sync the app)
